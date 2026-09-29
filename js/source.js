@@ -100,8 +100,81 @@ $(function () {
     // *********************************************************************
 
 
+    $("#username").text(username);
+    $(".revenue-amt").text(revenueAmt);
+    $("#customer-num").text(customerNum);
+    $("#orders-amt").text(ordersAmt);
+    $("#issues-amt").text(issuesAmt);
+    $("#notification-num").text(notifAmt);
 
+    $.each(customers, function (i, c) {
+        const $status = $("<span>")
+            .addClass("status status-" + c.status.toLowerCase())  
+            .text(c.status);
+        const $row = $("<tr>");
+        $row.append($("<td>").text(c.name));
+        $row.append($("<td>").text(c.email));
+        $row.append($("<td>").append($status));
+        $row.append($("<td>").text(c.joined));
+        $("#customerTableBody").append($row);
+    });
+
+
+    $.each(sales,function (i, sale) {
+        const $row = $("<tr>");
+        $row.append($("<td>").text(sale.product));
+        $row.append($("<td>").text(sale.quantity));
+        $row.append($("<td>").text(sale.revenue));
+        $("#salesTableBody").append($row);
+    });
        
+    function loadList(selector, items, key) {
+        $.each(items, function (i, item) {
+            $(selector).append($("<li>").text(item[key]));
+        });
+    }
 
+    loadList("#activity-list", activities, "message");
+    loadList("#system-status-list", messages, "messsage");    
+    loadList("#notifications-list", notifications, "messsage");
+    loadList("#tasks-list", tasks, "messsage");
+
+    $("button").button();
+
+    $("#dashboardTabs").tabs();
+
+    $("#customerDialog").dialog({
+        autoOpen: false,
+        modal: true,
+        width: 450,
+        buttons: {
+            "Create Customer": function () {
+            var name = $("#customerName").val();
+            var email = $("#customerEmail").val();
+            if (!name || !email) {
+                 alert(
+                 "Please enter a name and email."
+                    );
+                return;
+                }
+                 alert("Customer created: " + name);
+                 $(this).dialog("close");
+                },
+                  "Cancel": function () {
+                         $(this).dialog("close");
+                    }
+                 } 
+      } );
+
+    $("#accordion").accordion({
+        collapsible: true,
+        heightStyle: "content" 
+    });
+
+    $("#newCustomerButton").on("click", function () {
+        $("#customerDialog").dialog("open");
+    });
+
+    $("#customerDate").datepicker();
 
     });
